@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/lshearer/backbone.png?branch=master)](https://travis-ci.org/lshearer/backbone)
      ____                     __      __
     /\  _`\                  /\ \    /\ \                                   __
     \ \ \ \ \     __      ___\ \ \/'\\ \ \____    ___     ___      __      /\_\    ____
