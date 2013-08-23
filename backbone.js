@@ -1529,9 +1529,15 @@
   // Helper function to correctly set up the prototype chain, for subclasses.
   // Similar to `goog.inherits`, but uses a hash of prototype properties and
   // class properties to be extended.
-  var extend = function(protoProps, staticProps) {
+  var extend = function(classDebugName, protoProps, staticProps) {
     var parent = this;
     var child;
+      
+    if (typeof classDebugName !== 'string') {
+        staticProps = protoProps;
+        protoProps = classDebugName;
+        classDebugName = 'Surrogate';
+    }
 
     // The constructor function for the new subclass is either defined by you
     // (the "constructor" property in your `extend` definition), or defaulted
@@ -1547,10 +1553,13 @@
 
     // Set the prototype chain to inherit from `parent`, without calling
     // `parent`'s constructor function.
-    var Surrogate = function(){ this.constructor = child; };
-    Surrogate.prototype = parent.prototype;
-    child.prototype = new Surrogate;
 
+    // Using eval to dynamically name the Surrogate. This allows for better
+    // debugging inspections.
+    eval('var Surrogate = function(){ this.constructor = child; };\
+        Surrogate.prototype = parent.prototype;\
+        child.prototype = new Surrogate;'.replace(/Surrogate/g, classDebugName));
+      
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
     if (protoProps) _.extend(child.prototype, protoProps);
